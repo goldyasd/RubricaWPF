@@ -1,1 +1,1 @@
-# RubricaWPF
+# Rubrica
