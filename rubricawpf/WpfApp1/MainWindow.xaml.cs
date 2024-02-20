@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,41 +23,32 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-        List<Persona> persone = new List<Persona>();
+        Persone persone;
+        Contatti contatti;
         public MainWindow()
         {
             InitializeComponent();
 
-            List<Contatto> contatti = new List<Contatto>();
-            
-            StreamReader sr = new StreamReader("dati.csv");
-            StreamReader sr1 = new StreamReader("Persona.csv");
-            sr1.ReadLine();
-            sr.ReadLine();
-            while (!sr.EndOfStream)
-            {
-                string stringa = sr.ReadLine(); 
-                if(stringa.Split(';').Length == 3)
-                {
-                    
-                    contatti.Add(new Contatto(stringa));
-
-                }
-            }
-            for(int i = contatti.Count + 1; i <= 100; i++)
-            {
-                    contatti.Add(new Contatto(i));
-            }
-            while (!sr1.EndOfStream)
-            {
-                string s = sr1.ReadLine();
-                persone.Add(new Persona(Convert.ToInt32(s.Split(';')[0]), Enum.Parse<Type>(s.Split(';')[1]), s.Split(';')[2]));
-            }
-            dg.ItemsSource = contatti;
-            dg1.ItemsSource = new List<Persona>();
-
+            /*Considerando che potrebbe servirci spostare il codice su altre interfacce come Maui, ho inserito
+            un metodo Start() che richiama le operazioni da eseguire a inizio file, in modo da poter spostare
+            facilmente il metodo Start() in un'altra interfaccia*/
+            Start();
         }
 
+        private void Start()
+        {
+            try
+            {
+                persone = new Persone("Persona.csv");
+                contatti = new Contatti("dati.csv");
+                dg.ItemsSource = contatti;
+                dg1.ItemsSource = new Persone();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
 
         private void dg_LoadingRow(object sender, DataGridRowEventArgs e)
         {
@@ -72,7 +63,7 @@ namespace WpfApp1
         private void dg1_LoadingRow(object sender, SelectionChangedEventArgs e)
         {
             Contatto pe = e.AddedItems[0] as Contatto;
-            List<Persona> list = new List<Persona>();
+            Persone list = new Persone();
             foreach(Persona p in persone)
             {
                 try
