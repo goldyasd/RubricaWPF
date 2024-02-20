@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,5 +38,29 @@ namespace WpfApp1
 
 
 
+    }
+    internal class Contatti : List<Contatto>
+    {
+        public Contatti() { }
+        public Contatti(string nomefile)
+        {
+            StreamReader sr = new StreamReader(nomefile);
+            sr.ReadLine();
+            while (!sr.EndOfStream)
+            {
+                string stringa = sr.ReadLine();
+                if (stringa.Split(';').Length == 3)
+                {
+
+                    Add(new Contatto(stringa));
+
+                }
+            }
+            for (int i = base.Count + 1; i <= 100; i++)
+            {
+                Add(new Contatto(i));
+            }
+            sr.Close();
+        }
     }
 }
