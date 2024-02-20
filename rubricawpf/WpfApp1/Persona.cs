@@ -1,5 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,21 @@ namespace WpfApp1
         public string Valore
         {
             get { return valore; }
+        }
+    }
+
+    internal class Persone : List<Persona> {
+        public Persone() { }
+        public Persone(string nomefile)
+        {
+            StreamReader sr = new StreamReader(nomefile);
+            sr.ReadLine();
+            while (!sr.EndOfStream)
+            {
+                string s = sr.ReadLine();
+                Add(new Persona(Convert.ToInt32(s.Split(';')[0]), Enum.Parse<Type>(s.Split(';')[1]), s.Split(';')[2]));
+            }
+            sr.Close();
         }
     }
 }
